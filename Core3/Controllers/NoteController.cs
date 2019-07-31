@@ -12,6 +12,7 @@ namespace Core3.WebUI.Controllers
     [ApiController]
     public class NoteController : BaseController
     {
+        [Route("api/notes")]
         [HttpGet]
         public async Task<ActionResult<IList<NoteDto>>> GetNotes()
         {

@@ -12,18 +12,22 @@ namespace Core3.Application.Queries.Notes
     {
         public Task<List<NoteDto>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
         {
-            return Task.Run(() => new List<NoteDto>
+            return Task.Run(() =>
             {
-                new NoteDto
+                Thread.Sleep(1000);
+                return new List<NoteDto>
                 {
-                    Id = Guid.NewGuid(),
-                    Text = "Text 1"
-                },
-                new NoteDto
-                {
-                    Id = Guid.NewGuid(),
-                    Text = "Text 2"
-                }
+                    new NoteDto
+                    {
+                        Id = Guid.NewGuid(),
+                        Text = "Text 1"
+                    },
+                    new NoteDto
+                    {
+                        Id = Guid.NewGuid(),
+                        Text = "Text 2"
+                    }
+                };
             });
         }
     }
