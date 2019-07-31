@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core3.Application.Commands.Notes;
 using Core3.Application.Models.Note;
 using Core3.Application.Queries.Notes;
 using Microsoft.AspNetCore.Http;
@@ -14,9 +13,20 @@ namespace Core3.WebUI.Controllers
     {
         [Route("api/notes")]
         [HttpGet]
-        public async Task<ActionResult<IList<NoteDto>>> GetNotes()
+        public async Task<ActionResult<IList<NoteDto>>> GetList()
         {
             return Ok(await Mediator.Send(new GetNotesQuery()));
+        }
+
+        [Route("api/notes")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesDefaultResponseType]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateNoteCommand command)
+        {
+            await Mediator.Send(command);
+
+            return NoContent();
         }
     }
 }

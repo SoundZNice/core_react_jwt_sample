@@ -1,9 +1,12 @@
 using System.Reflection;
 using AutoMapper;
-using Core3.Application.Commands.Note;
+using Core3.Application.Commands.Notes;
+using Core3.Application.Infrastructure;
 using Core3.Application.Infrastructure.AutoMapper;
 using Core3.Application.Interfaces;
 using Core3.Persistence;
+using Core3.WebUI.Filters;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,11 +33,15 @@ namespace Core3.WebUI
             services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);
 
             services.AddMediatR(typeof(CreateNoteCommand).GetTypeInfo().Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
 
             services.AddDbContext<ICore3DbContext, Core3DbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Core3DB")));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateNoteCommandValidator>());
 
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
