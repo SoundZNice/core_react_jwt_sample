@@ -2,16 +2,18 @@ using System.Reflection;
 using AutoMapper;
 using Core3.Application.Commands.Note;
 using Core3.Application.Infrastructure.AutoMapper;
+using Core3.Application.Interfaces;
+using Core3.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core3
+namespace Core3.WebUI
 {
     public class Startup
     {
@@ -19,7 +21,7 @@ namespace Core3
         {
             Configuration = configuration;
         }
-
+        
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -28,6 +30,9 @@ namespace Core3
             services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);
 
             services.AddMediatR(typeof(CreateNoteCommand).GetTypeInfo().Assembly);
+
+            services.AddDbContext<ICore3DbContext, Core3DbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("Core3DB")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core3.Application\Core3.Application.csproj" />
+    <ProjectReference Include="..\Core3.Persistence\Core3.Persistence.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
