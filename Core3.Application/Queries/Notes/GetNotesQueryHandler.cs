@@ -28,7 +28,7 @@ namespace Core3.Application.Queries.Notes
                         Text = "Text 2"
                     }
                 };
-            });
+            }, cancellationToken);
         }
     }
 }
