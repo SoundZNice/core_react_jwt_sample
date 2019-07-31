@@ -3,33 +3,34 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Core3.Application.Interfaces;
 using Core3.Application.Models.Note;
+using Core3.Common.Helpers;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core3.Application.Queries.Notes
 {
     public class GetNotesQueryHandler : IRequestHandler<GetNotesQuery, List<NoteDto>>
     {
-        public Task<List<NoteDto>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
+        private readonly ICore3DbContext _context;
+        private readonly IMapper _mapper;
+
+        public GetNotesQueryHandler(ICore3DbContext context, IMapper mapper)
         {
-            // this is custom comment to check branches power!
-            return Task.Run(() =>
-            {
-                Thread.Sleep(1000);
-                return new List<NoteDto>
-                {
-                    new NoteDto
-                    {
-                        Id = Guid.NewGuid(),
-                        Text = "Text 1"
-                    },
-                    new NoteDto
-                    {
-                        Id = Guid.NewGuid(),
-                        Text = "Text 2"
-                    }
-                };
-            }, cancellationToken);
+            Guard.ArgumentNotNull(context, nameof(context));
+            Guard.ArgumentNotNull(mapper, nameof(mapper));
+
+            _context = context;
+            _mapper = mapper;
+        }
+
+        public async Task<List<NoteDto>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
+        {
+            return await _context.Notes.ProjectTo<NoteDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
     }
 }
