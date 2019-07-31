@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core3.WebUI", "Core3\Core3.WebUI.csproj", "{7978EE95-CF55-410D-B361-F358D6F53B99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.Application", "Core3.Application\Core3.Application.csproj", "{CE602A71-3214-4BE3-A11C-E6CB692C9E58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core3.Application", "Core3.Application\Core3.Application.csproj", "{CE602A71-3214-4BE3-A11C-E6CB692C9E58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.Domain", "Core3.Domain\Core3.Domain.csproj", "{E8BF9168-9B8A-42F1-A26E-577FE0FFD4DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core3.Domain", "Core3.Domain\Core3.Domain.csproj", "{E8BF9168-9B8A-42F1-A26E-577FE0FFD4DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.Infrastructure", "Core3.Infrastructure\Core3.Infrastructure.csproj", "{15B01994-476B-4CB4-BE31-F660EBB8A75B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core3.Infrastructure", "Core3.Infrastructure\Core3.Infrastructure.csproj", "{15B01994-476B-4CB4-BE31-F660EBB8A75B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.Persistence", "Core3.Persistence\Core3.Persistence.csproj", "{085487DF-5A73-49A2-B89D-03798ECFC731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core3.Persistence", "Core3.Persistence\Core3.Persistence.csproj", "{085487DF-5A73-49A2-B89D-03798ECFC731}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.WebUI", "Core3.WebUI\Core3.WebUI.csproj", "{CEE611F3-E162-4E23-AF34-C63B481005DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7978EE95-CF55-410D-B361-F358D6F53B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7978EE95-CF55-410D-B361-F358D6F53B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7978EE95-CF55-410D-B361-F358D6F53B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7978EE95-CF55-410D-B361-F358D6F53B99}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CE602A71-3214-4BE3-A11C-E6CB692C9E58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE602A71-3214-4BE3-A11C-E6CB692C9E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE602A71-3214-4BE3-A11C-E6CB692C9E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{085487DF-5A73-49A2-B89D-03798ECFC731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{085487DF-5A73-49A2-B89D-03798ECFC731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{085487DF-5A73-49A2-B89D-03798ECFC731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEE611F3-E162-4E23-AF34-C63B481005DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE611F3-E162-4E23-AF34-C63B481005DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE611F3-E162-4E23-AF34-C63B481005DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE611F3-E162-4E23-AF34-C63B481005DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
