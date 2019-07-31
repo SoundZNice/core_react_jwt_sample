@@ -12,6 +12,7 @@ namespace Core3.Application.Queries.Notes
     {
         public Task<List<NoteDto>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
         {
+            // this is custom comment to check branches power!
             return Task.Run(() =>
             {
                 Thread.Sleep(1000);
