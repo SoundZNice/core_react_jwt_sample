@@ -15,7 +15,11 @@ export default class Notes extends Component {
         return (
             <div>
                 {notes.map(n => (
-                    <Note key={n.id} id={n.id} text={n.text}/>
+                    <Note 
+                        key={n.id} 
+                        id={n.id} 
+                        text={n.text}
+                        date={n.dateModified}/>
                 ))}
             </div>
         )

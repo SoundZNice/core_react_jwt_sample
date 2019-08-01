@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Toast, ToastBody } from 'reactstrap';
+import { Toast, ToastBody, ToastHeader } from 'reactstrap';
 import '../styles/styles.css'
 
 export default class Note extends Component {
@@ -8,15 +8,19 @@ export default class Note extends Component {
 
         this.state = { 
             id: this.props.id, 
-            text: this.props.text 
+            text: this.props.text,
+            date: new Date(this.props.date).toLocaleString()
         };
     }
 
     render() {
         return (
             <Toast className="note">
+                <ToastHeader>
+                    <span className="note-date">{this.state.date}</span>
+                </ToastHeader>
                 <ToastBody>
-                    {this.state.text}
+                    <span>{this.state.text}</span>
                 </ToastBody>
             </Toast>
         )

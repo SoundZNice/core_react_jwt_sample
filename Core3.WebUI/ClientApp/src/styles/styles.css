@@ -16,3 +16,8 @@
 .note-input {
     margin-top: 5px
 }
+
+.note-date {
+    font-size: 8px;
+    color: #bacdcf;
+}
