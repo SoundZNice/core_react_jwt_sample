@@ -1,7 +1,7 @@
 .note-container {
-    max-height: 500px;
+    height: 70vh;
     overflow: auto;
-    background-color: #ebf9fa
+    background-color: #ebf9fa;
 }
 
 .note {
@@ -20,4 +20,8 @@
 .note-date {
     font-size: 8px;
     color: #bacdcf;
+}
+
+.note-create-button {
+    outline: none;
 }

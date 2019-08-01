@@ -9,6 +9,8 @@ export default class Notes extends Component {
     constructor (props) {
         super(props);
         this.state = { notes: [], loading: true};
+
+        this.last = React.createRef();
     }
 
     renderNotes = (notes) => {
@@ -37,6 +39,17 @@ export default class Notes extends Component {
 
     async componentDidMount() {
         await this.fetchNotes();
+        this.last.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        })
+    }
+
+    componentDidUpdate() {
+        this.last.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        })
     }
 
     render(){
@@ -45,10 +58,11 @@ export default class Notes extends Component {
             : this.renderNotes(this.state.notes)
 
         return (      
-            <Container >  
+            <Container ref={this.cont}>  
                 <Row>   
                     <Col className="note-container">
                         {contents}
+                        <div ref={this.last}></div>
                     </Col>
                 </Row>
                 <Row>                    

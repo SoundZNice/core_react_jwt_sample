@@ -10,8 +10,10 @@ export default class NoteInput extends Component {
     }
 
     onClick = (e) => {
-        this.props.create(this.state.text)
-        this.setState({ text: '' })
+        if (this.state.text){
+            this.props.create(this.state.text)
+            this.setState({ text: '' })
+        }
         e.preventDefault()
     }
 
@@ -31,8 +33,8 @@ export default class NoteInput extends Component {
                             onChange={this.onChange} />
                     </Col>
                     <Col>
-                        <Button 
-                            outline 
+                        <Button
+                            className="note-create-button" 
                             onClick={this.onClick}>
                                 Send...
                         </Button>
