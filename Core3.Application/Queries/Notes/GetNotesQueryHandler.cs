@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Core3.Application.Queries.Notes
         public async Task<List<NoteDto>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
         {
             return await _context.Notes.ProjectTo<NoteDto>(_mapper.ConfigurationProvider)
+                .OrderBy(n => n.DateModified)
                 .ToListAsync(cancellationToken);
         }
     }
