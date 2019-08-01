@@ -25,7 +25,9 @@ namespace Core3.Application.Commands.Notes
         {
             Note note = new Note
             {
-                Text = request.Text
+                Text = request.Text,
+                DateCreated = DateTime.UtcNow,
+                DateModified = DateTime.UtcNow
             };
 
             _context.Notes.Add(note);

@@ -6,7 +6,7 @@ namespace Core3.Application.Commands.Notes
     {
         public CreateNoteCommandValidator()
         {
-            RuleFor(x => x.Text).Must(text => false).WithMessage("Text is empty");
+            RuleFor(x => x.Text).Must(text => !string.IsNullOrWhiteSpace(text)).WithMessage("Text is empty");
         }
     }
 }

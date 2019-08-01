@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { Toast, ToastBody } from 'reactstrap';
+import '../styles/styles.css'
 
 export default class Note extends Component {
     constructor (props) {
@@ -12,9 +14,11 @@ export default class Note extends Component {
 
     render() {
         return (
-            <div className="note">
-                <span>{this.state.text}</span>
-            </div>
+            <Toast className="note">
+                <ToastBody>
+                    {this.state.text}
+                </ToastBody>
+            </Toast>
         )
     }
 }

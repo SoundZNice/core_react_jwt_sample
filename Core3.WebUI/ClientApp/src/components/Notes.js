@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import { Container, Row, Col } from 'reactstrap';
 import Note from './Note'
-import { getNotes } from './Fetch'
+import NoteInput from './NoteInput'
+import { getNotes, createNote } from './Fetch'
+import '../styles/styles.css'
 
 export default class Notes extends Component {
     constructor (props) {
@@ -18,9 +21,18 @@ export default class Notes extends Component {
         )
     }
 
-    async componentDidMount() {
+    createNew = async (text) => {
+        await createNote(text);
+        await this.fetchNotes();
+    }
+
+    fetchNotes = async () => {
         const notes = await getNotes();
         this.setState({notes: notes, loading: false});
+    }
+
+    async componentDidMount() {
+        await this.fetchNotes();
     }
 
     render(){
@@ -28,10 +40,17 @@ export default class Notes extends Component {
             ? <p><em>Loading...</em></p>
             : this.renderNotes(this.state.notes)
 
-        return (
-            <div className="note-container">
-                {contents}
-            </div>
+        return (      
+            <Container >  
+                <Row>   
+                    <Col className="note-container">
+                        {contents}
+                    </Col>
+                </Row>
+                <Row>                    
+                    <NoteInput create={this.createNew}/>                    
+                </Row>
+            </Container>
         );
     }
 }
