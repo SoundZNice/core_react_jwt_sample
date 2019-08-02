@@ -1,17 +1,14 @@
-export async function getNotes(errorcallback) {
-    let json;
-    await fetch('api/notes')
-        .then(response => json = response.json())
-        .catch(error => {
-            if (errorcallback)
-                errorcallback(error)
-        });
-    
-    return json;
+export async function getNotes() {
+    const response = await fetch('api/notes');
+
+    return {
+        obj: response.json(),
+        status: response.status
+    };
 }
 
-export async function createNote(text, successcallback, errorcallback){
-    await fetch('api/notes', {
+export async function createNote(text) {
+    const response = await fetch('api/notes', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -20,11 +17,9 @@ export async function createNote(text, successcallback, errorcallback){
         body: JSON.stringify({
             text: text
         })
-    }).then(response => {
-        if (successcallback)
-            successcallback(response)
-    }).catch(error => {
-        if (errorcallback)
-            errorcallback(error)
-    })
+    });
+
+    return response.status;
 }
+
+
