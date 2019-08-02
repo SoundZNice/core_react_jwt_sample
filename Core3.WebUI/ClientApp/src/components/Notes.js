@@ -29,7 +29,7 @@ export default class Notes extends Component {
 
     createNew = async (text) => {
         const result = await createNote(text);
-        if (result === 200)
+        if (result === 204)
             await this.fetchNotes();
         else
             this.props.history.push('/500')

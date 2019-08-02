@@ -2,7 +2,7 @@ export async function getNotes() {
     const response = await fetch('api/notes');
 
     return {
-        obj: response.json(),
+        obj: await response.json(),
         status: response.status
     };
 }

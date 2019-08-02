@@ -1,14 +1,25 @@
 ﻿using System;
 using System.Net;
 using Core3.Application.Exceptions;
+using Core3.Common.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace Core3.WebUI.Filters
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     {
+        private readonly ILogger _logger;
+
+        public CustomExceptionFilterAttribute(ILogger<CustomExceptionFilterAttribute> logger)
+        {
+            Guard.ArgumentNotNull(logger, nameof(logger));
+
+            _logger = logger;
+        }
+
         public override void OnException(ExceptionContext context)
         {
             if (context.Exception is ValidationException)
@@ -38,6 +49,8 @@ namespace Core3.WebUI.Filters
                     error = new[] { context.Exception.Message},
                     stackTrace = context.Exception.StackTrace
                 });
+
+                _logger.LogError($"{context.Exception.Message}|{context.Exception.StackTrace}");
             }
         }
     }

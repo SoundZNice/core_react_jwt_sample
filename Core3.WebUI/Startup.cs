@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reflection;
 using AutoMapper;
 using Core3.Application.Commands.Notes;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Core3.WebUI
@@ -24,11 +26,14 @@ namespace Core3.WebUI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(configuration["Logging:SerilogPath"], rollingInterval:RollingInterval.Hour)
+                .CreateLogger();
         }
         
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);
@@ -52,9 +57,10 @@ namespace Core3.WebUI
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddSerilog();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
