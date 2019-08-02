@@ -30,6 +30,7 @@ namespace Core3.Application.Queries.Notes
 
         public async Task<List<NoteDto>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
         {
+            throw new Exception("Smth went wrong");
             return await _context.Notes.ProjectTo<NoteDto>(_mapper.ConfigurationProvider)
                 .OrderBy(n => n.DateModified)
                 .ToListAsync(cancellationToken);
