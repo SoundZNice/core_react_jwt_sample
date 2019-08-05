@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Core3.Application.Commands.User;
+using Core3.Application.Models.Token;
 using Core3.Application.Queries.User;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace Core3.WebUI.Controllers
         [IgnoreAntiforgeryToken]
         [Route("api/login")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginUserCommand loginUserCommand)
+        public async Task<ActionResult<TokenViewModel>> Login([FromBody] LoginUserCommand loginUserCommand)
         {
             return Ok(await Mediator.Send(loginUserCommand));
         }

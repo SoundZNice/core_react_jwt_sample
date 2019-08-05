@@ -1,9 +1,15 @@
+using System;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Core3.Application.Commands.Notes;
 using Core3.Application.Infrastructure;
 using Core3.Application.Infrastructure.AutoMapper;
 using Core3.Application.Interfaces;
+using Core3.Application.Interfaces.Services;
+using Core3.Application.Models.ApiSettings;
+using Core3.Application.Models.Token;
 using Core3.Persistence;
 using Core3.WebUI.Filters;
 using FluentValidation.AspNetCore;
@@ -12,9 +18,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Core3.WebUI
 {
@@ -49,6 +58,71 @@ namespace Core3.WebUI
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddOptions<BearerTokenOptions>()
+                .Bind(Configuration.GetSection("BearerTokens"))
+                .Validate(
+                    bearerTokens =>
+                        bearerTokens.AccessTokenExpirationMinutes < bearerTokens.RefreshTokenExpirationMinutes,
+                    "RefrechTokenExpirationMinutes is less then AccessTokenExpirationMinutes. Obtaining new tokens using the refresh token should happen only if the access token has expired.");
+
+            services.AddOptions<ApiSettings>()
+                .Bind(Configuration.GetSection("ApiSettings"));
+
+            services.AddAuthentication()
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["BearerTokens:Issuer"],
+                        ValidateIssuer = false, // TODO: change
+                        ValidAudience = Configuration["BearerTokens:Audience"],
+                        ValidateAudience = false, // TODO: change
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["BearerTokens:Key"])),
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                    cfg.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = ctx =>
+                        {
+                            ILogger logger = ctx.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                                .CreateLogger(nameof(JwtBearerEvents));
+                            logger.LogError("Authentication failed.", ctx.Exception);
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = ctx =>
+                        {
+                            ITokenValidatorService tokenValidatorService =
+                                ctx.HttpContext.RequestServices.GetRequiredService<ITokenValidatorService>();
+                            return tokenValidatorService.ValidateAsync(ctx);
+                        },
+                        OnMessageReceived = ctx => Task.CompletedTask,
+                        OnChallenge = ctx =>
+                        {
+                            ILogger logger = ctx.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                                .CreateLogger(nameof(JwtBearerEvents));
+                            logger.LogError("OnChallenge error", ctx.Error, ctx.ErrorDescription);
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
+            services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +142,8 @@ namespace Core3.WebUI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseSwaggerUi3(settings =>
             {

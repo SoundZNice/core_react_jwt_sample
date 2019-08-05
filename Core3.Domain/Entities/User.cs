@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Core3.Application.Models.Token;
 
-namespace Core3.Application.Models.User
+namespace Core3.Domain.Entities
 {
-    public class UserDto
+    public sealed class User
     {
-        public UserDto()
+        public User()
         {
-            UserTokens = new HashSet<UserTokenDto>();
+            UserTokens = new HashSet<UserToken>();
         }
 
         public Guid Id { get; set; }
@@ -26,6 +24,6 @@ namespace Core3.Application.Models.User
 
         public string SerialNumber { get; set; }
 
-        public ICollection<UserTokenDto> UserTokens { get; set; }
+        public ICollection<UserToken> UserTokens { get; set; }
     }
 }

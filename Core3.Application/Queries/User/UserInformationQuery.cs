@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Core3.Application.Queries.User
 {
-    public class UserInformationQuery : IRequest<UserDTO>
+    public class UserInformationQuery : IRequest<UserDto>
     {
     }
 }

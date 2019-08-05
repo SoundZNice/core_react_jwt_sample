@@ -12,11 +12,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.Persistence", "Core3.Persistence\Core3.Persistence.csproj", "{085487DF-5A73-49A2-B89D-03798ECFC731}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.WebUI", "Core3.WebUI\Core3.WebUI.csproj", "{CEE611F3-E162-4E23-AF34-C63B481005DB}"
-<<<<<<< HEAD
-=======
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core3.Common", "Core3.Common\Core3.Common.csproj", "{D632138A-2B87-4FA8-8278-DCD812DFE9E5}"
->>>>>>> efinit
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core3.Common", "Core3.Common\Core3.Common.csproj", "{D632138A-2B87-4FA8-8278-DCD812DFE9E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core3.Services", "Core3.Services\Core3.Services.csproj", "{81EA15E9-E38E-4934-8D70-52F1A960571E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,13 +43,14 @@ Global
 		{CEE611F3-E162-4E23-AF34-C63B481005DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEE611F3-E162-4E23-AF34-C63B481005DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEE611F3-E162-4E23-AF34-C63B481005DB}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
-=======
 		{D632138A-2B87-4FA8-8278-DCD812DFE9E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D632138A-2B87-4FA8-8278-DCD812DFE9E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D632138A-2B87-4FA8-8278-DCD812DFE9E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D632138A-2B87-4FA8-8278-DCD812DFE9E5}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> efinit
+		{81EA15E9-E38E-4934-8D70-52F1A960571E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81EA15E9-E38E-4934-8D70-52F1A960571E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81EA15E9-E38E-4934-8D70-52F1A960571E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81EA15E9-E38E-4934-8D70-52F1A960571E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
