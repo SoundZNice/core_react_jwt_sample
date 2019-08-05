@@ -16,6 +16,10 @@ namespace Core3.Persistence
 
         public DbSet<Note> Notes { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<UserToken> UserTokens { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Core3DbContext).Assembly);

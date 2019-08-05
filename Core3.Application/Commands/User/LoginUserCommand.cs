@@ -1,11 +1,11 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Core3.Application.Exceptions;
 using Core3.Application.Interfaces;
 using Core3.Application.Interfaces.Services;
 using Core3.Application.Models.Token;
 using Core3.Application.Models.User;
+using Core3.Application.ViewModels;
 using Core3.Common.Helpers;
 using FluentValidation;
 using MediatR;

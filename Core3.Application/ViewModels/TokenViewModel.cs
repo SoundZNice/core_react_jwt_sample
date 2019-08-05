@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Core3.Application.Models.Token
+﻿namespace Core3.Application.ViewModels
 {
     public class TokenViewModel
     {

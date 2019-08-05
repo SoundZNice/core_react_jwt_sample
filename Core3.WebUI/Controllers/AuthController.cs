@@ -2,6 +2,7 @@
 using Core3.Application.Commands.User;
 using Core3.Application.Models.Token;
 using Core3.Application.Queries.User;
+using Core3.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core3.WebUI.Controllers
@@ -25,14 +26,14 @@ namespace Core3.WebUI.Controllers
 
         [Route("api/refresh")]
         [HttpPost]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand refreshTokenCommand)
+        public async Task<ActionResult<TokenViewModel>> RefreshToken([FromBody] RefreshTokenCommand refreshTokenCommand)
         {
             return Ok(await Mediator.Send(refreshTokenCommand));
         }
 
         [Route("api/logout")]
         [HttpPost]
-        public async Task<IActionResult> Logout([FromBody] LogoutCommand logoutCommand)
+        public async Task<ActionResult<bool>> Logout([FromBody] LogoutCommand logoutCommand)
         {
             return Ok(await Mediator.Send(logoutCommand));
         }

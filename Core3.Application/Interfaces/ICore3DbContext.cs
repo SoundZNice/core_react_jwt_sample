@@ -12,6 +12,10 @@ namespace Core3.Application.Interfaces
     {
         DbSet<Note> Notes { get; set; }
 
+        DbSet<User> Users { get; set; }
+
+        DbSet<UserToken> UserTokens { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
