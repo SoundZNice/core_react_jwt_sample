@@ -12,7 +12,7 @@ namespace Core3.Domain.Entities
 
         public string RefreshTokenIdHash { get; set; }
 
-        public string RefreshTokenHashSource { get; set; }
+        public string RefreshTokenIdHashSource { get; set; }
 
         public DateTimeOffset RefreshTokenExpiresDateTIme { get; set; }
 

@@ -15,7 +15,7 @@ namespace Core3.Application.Interfaces.Services
         Task AddUserTokenAsync(UserDto user, string refreshTOkenSerial, string accessToken,
             string refreshTokenSourceSerial);
 
-        Task<bool> IsValidTokenAsync(string accessToken, int userId);
+        Task<bool> IsValidTokenAsync(string accessToken, Guid userId);
 
         Task DeleteExpiredTokensAsync();
 
@@ -23,7 +23,7 @@ namespace Core3.Application.Interfaces.Services
 
         Task DeleteTokenAsync(string refreshTokenValue);
 
-        Task DeleteTokenWithSameRefreshTokenSourceAsync(Guid userId);
+        Task DeleteTokensWithSameRefreshTokenSourceAsync(string refreshTokenIdHashSource);
 
         Task InvalidateUserTokensAsync(Guid userId);
 

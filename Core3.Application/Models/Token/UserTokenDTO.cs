@@ -7,7 +7,7 @@ namespace Core3.Application.Models.Token
 {
     public class UserTokenDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string AccessTokenHash { get; set; }
 
@@ -19,7 +19,7 @@ namespace Core3.Application.Models.Token
 
         public DateTimeOffset RefreshTokenExpiresDateTime { get; set; }
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public UserDto User { get; set; }
     }

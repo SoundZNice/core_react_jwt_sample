@@ -1,0 +1,151 @@
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Core3.Application.Interfaces;
+using Core3.Application.Interfaces.Services;
+using Core3.Application.Models.Token;
+using Core3.Application.Models.User;
+using Core3.Common.Helpers;
+using Core3.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+
+namespace Core3.Services.Services
+{
+    public class TokenStoreService : ITokenStoreService
+    {
+        private readonly ISecurityService _securityService;
+        private readonly ICore3DbContext _context;
+        private readonly IOptionsSnapshot<BearerTokenOptions> _configuration;
+        private readonly ITokenFactoryService _tokenFactoryService;
+        private readonly IMapper _mapper;
+
+        public TokenStoreService(
+            ISecurityService securityService,
+            ICore3DbContext context, 
+            IOptionsSnapshot<BearerTokenOptions> configuration,
+            IMapper mapper,
+            ITokenFactoryService tokenFactoryService)
+        {
+            Guard.ArgumentNotNull(securityService, nameof(SecurityToken));
+            Guard.ArgumentNotNull(context, nameof(context));
+            Guard.ArgumentNotNull(configuration, nameof(configuration));
+            Guard.ArgumentNotNull(tokenFactoryService, nameof(tokenFactoryService));
+            Guard.ArgumentNotNull(mapper, nameof(mapper));
+
+            _securityService = securityService;
+            _context = context;
+            _configuration = configuration;
+            _tokenFactoryService = tokenFactoryService;
+            _mapper = mapper;
+        }
+
+        public async Task AddUserTokenAsync(UserTokenDto userToken)
+        {
+            if (!_configuration.Value.AllowMultipleLoginFromTheSameUser)
+            {
+                await InvalidateUserTokensAsync(userToken.UserId);
+            }
+
+            await DeleteTokensWithSameRefreshTokenSourceAsync(userToken.RefreshTokenIdHashSource);
+            await _context.UserTokens.AddAsync(_mapper.Map<UserTokenDto, UserToken>(userToken));
+        }
+
+        public async Task AddUserTokenAsync(UserDto user, string refreshTOkenSerial, string accessToken, string refreshTokenSourceSerial)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            UserTokenDto token = new UserTokenDto
+            {
+                UserId = user.Id,
+                RefreshTokenIdHash = _securityService.GetSha256Hash(refreshTOkenSerial),
+                RefreshTokenIdHashSource = string.IsNullOrWhiteSpace(refreshTokenSourceSerial)
+                    ? null
+                    : _securityService.GetSha256Hash(refreshTokenSourceSerial),
+                AccessTokenHash = _securityService.GetSha256Hash(accessToken),
+                RefreshTokenExpiresDateTime = now.AddMinutes(_configuration.Value.RefreshTokenExpirationMinutes),
+                AccessTokenExpiresDateTime = now.AddMinutes(_configuration.Value.AccessTokenExpirationMinutes)
+            };
+            await AddUserTokenAsync(token);
+        }
+
+        public async Task<bool> IsValidTokenAsync(string accessToken, Guid userId)
+        {
+            string accessTokenHash = _securityService.GetSha256Hash(accessToken);
+            UserTokenDto token =
+                await _context.UserTokens.ProjectTo<UserTokenDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x =>
+                    x.AccessTokenHash == accessTokenHash && x.UserId == userId);
+
+            return token?.AccessTokenExpiresDateTime >= DateTimeOffset.UtcNow;
+        }
+
+        public async Task DeleteExpiredTokensAsync()
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            await _context.UserTokens.Where(x => x.RefreshTokenExpiresDateTIme < now)
+                .ForEachAsync(token => _context.UserTokens.Remove(token));
+        }
+
+        public async Task<UserTokenDto> FindTokenAsync(string refreshTokenValue)
+        {
+            UserTokenDto result = null;
+
+            if (!string.IsNullOrWhiteSpace(refreshTokenValue))
+            {
+                string refreshTokenSerial = _tokenFactoryService.GetRefreshTokenSerial(refreshTokenValue);
+                if (!string.IsNullOrWhiteSpace(refreshTokenSerial))
+                {
+                    string refreshTokenIdHash = _securityService.GetSha256Hash(refreshTokenSerial);
+                    result = await _context.UserTokens
+                        .ProjectTo<UserTokenDto>(_mapper.ConfigurationProvider)
+                        .Include(x => x.User)
+                        .FirstOrDefaultAsync(x => x.RefreshTokenIdHash == refreshTokenIdHash);
+                }
+            }
+
+            return result;
+        }
+
+        public async Task DeleteTokenAsync(string refreshTokenValue)
+        {
+            UserTokenDto userToken = await FindTokenAsync(refreshTokenValue);
+            if (userToken != null)
+                await _context.UserTokens.Where(t => t.Id == userToken.Id)
+                    .ForEachAsync(token => _context.UserTokens.Remove(token));
+        }
+
+        public async Task DeleteTokensWithSameRefreshTokenSourceAsync(string refreshTokenIdRefreshSource)
+        {
+            if (!string.IsNullOrWhiteSpace(refreshTokenIdRefreshSource))
+            {
+                await _context.UserTokens.Where(t => t.RefreshTokenIdHashSource == refreshTokenIdRefreshSource)
+                    .ForEachAsync(token => _context.UserTokens.Remove(token));
+            }
+        }
+
+        public async Task InvalidateUserTokensAsync(Guid userId)
+        {
+            await _context.UserTokens.Where(x => x.UserId == userId)
+                .ForEachAsync(userToken => _context.UserTokens.Remove(userToken));
+        }
+
+        public async Task RevokeUserBearerTokensAsync(string userIdValue, string refreshTokenValue)
+        {
+            if (!string.IsNullOrWhiteSpace(userIdValue) && Guid.TryParse(userIdValue, out Guid userId))
+            {
+                if (_configuration.Value.AllowSignoutAllUserActiveClients)
+                    await InvalidateUserTokensAsync(userId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(refreshTokenValue))
+            {
+                string refreshTokenIdHashSource = _tokenFactoryService.GetRefreshTokenSerial(refreshTokenValue);
+                await DeleteTokensWithSameRefreshTokenSourceAsync(refreshTokenIdHashSource);
+            }
+
+            await DeleteExpiredTokensAsync();
+        }
+    }
+}
