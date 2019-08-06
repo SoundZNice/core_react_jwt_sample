@@ -20,26 +20,22 @@ namespace Core3.Services.Services
         private readonly ICore3DbContext _context;
         private readonly IOptionsSnapshot<BearerTokenOptions> _configuration;
         private readonly ITokenFactoryService _tokenFactoryService;
-        private readonly IMapper _mapper;
 
         public TokenStoreService(
             ISecurityService securityService,
             ICore3DbContext context, 
             IOptionsSnapshot<BearerTokenOptions> configuration,
-            IMapper mapper,
             ITokenFactoryService tokenFactoryService)
         {
             Guard.ArgumentNotNull(securityService, nameof(SecurityToken));
             Guard.ArgumentNotNull(context, nameof(context));
             Guard.ArgumentNotNull(configuration, nameof(configuration));
             Guard.ArgumentNotNull(tokenFactoryService, nameof(tokenFactoryService));
-            Guard.ArgumentNotNull(mapper, nameof(mapper));
 
             _securityService = securityService;
             _context = context;
             _configuration = configuration;
             _tokenFactoryService = tokenFactoryService;
-            _mapper = mapper;
         }
 
         public async Task AddUserTokenAsync(UserToken userToken)
@@ -50,7 +46,7 @@ namespace Core3.Services.Services
             }
 
             await DeleteTokensWithSameRefreshTokenSourceAsync(userToken.RefreshTokenIdHashSource);
-            await _context.UserTokens.AddAsync(_mapper.Map<UserToken, UserToken>(userToken));
+            await _context.UserTokens.AddAsync(userToken);
         }
 
         public async Task AddUserTokenAsync(User user, string refreshTOkenSerial, string accessToken, string refreshTokenSourceSerial)
@@ -74,7 +70,7 @@ namespace Core3.Services.Services
         {
             string accessTokenHash = _securityService.GetSha256Hash(accessToken);
             UserToken token =
-                await _context.UserTokens.ProjectTo<UserToken>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x =>
+                await _context.UserTokens.FirstOrDefaultAsync(x =>
                     x.AccessTokenHash == accessTokenHash && x.UserId == userId);
 
             return token?.AccessTokenExpiresDateTime >= DateTimeOffset.UtcNow;
@@ -98,7 +94,6 @@ namespace Core3.Services.Services
                 {
                     string refreshTokenIdHash = _securityService.GetSha256Hash(refreshTokenSerial);
                     result = await _context.UserTokens
-                        .ProjectTo<UserToken>(_mapper.ConfigurationProvider)
                         .Include(x => x.User)
                         .FirstOrDefaultAsync(x => x.RefreshTokenIdHash == refreshTokenIdHash);
                 }

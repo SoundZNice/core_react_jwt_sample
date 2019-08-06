@@ -22,5 +22,7 @@ namespace Core3.Application.Interfaces.Services
 
         Task<(bool succeeded, string error)> ChangePasswordAsync(User user, string currentPassword,
             string newPassword);
+
+        string CreatePasswordForUser(string password);
     }
 }

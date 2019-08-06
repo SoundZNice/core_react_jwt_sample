@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using Core3.Application.Interfaces;
 using Core3.Application.Interfaces.Services;
@@ -101,6 +100,14 @@ namespace Core3.Services.Services
             user.Password = _securityService.GetSha256Hash(newPassword);
             await _context.SaveChangesAsync(default);
             return (true, string.Empty);
+        }
+
+        public string CreatePasswordForUser(string password)
+        {
+            Guard.ArgumentStringNotNull(password, nameof(password));
+
+            string passwordHash = _securityService.GetSha256Hash(password);
+            return _securityService.GetSha256Hash(password);
         }
     }
 }
