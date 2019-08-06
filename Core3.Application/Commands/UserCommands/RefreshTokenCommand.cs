@@ -6,11 +6,12 @@ using Core3.Application.Interfaces.Services;
 using Core3.Application.Models.Token;
 using Core3.Application.ViewModels;
 using Core3.Common.Helpers;
+using Core3.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Newtonsoft.Json.Linq;
 
-namespace Core3.Application.Commands.User
+namespace Core3.Application.Commands.UserCommands
 {
     public class RefreshTokenCommand : IRequest<TokenViewModel>
     {
@@ -38,7 +39,7 @@ namespace Core3.Application.Commands.User
             {
                 string refreshTokenValue = request.JsonBody.Value<string>("refreshToken");
 
-                UserTokenDto token = await _tokenStoreService.FindTokenAsync(refreshTokenValue);
+                UserToken token = await _tokenStoreService.FindTokenAsync(refreshTokenValue);
                 if (token == null)
                     throw new UnauthrizedException();
 

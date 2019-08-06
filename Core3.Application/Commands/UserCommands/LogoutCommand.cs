@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Core3.Application.Interfaces;
@@ -10,7 +7,7 @@ using Core3.Common.Helpers;
 using FluentValidation;
 using MediatR;
 
-namespace Core3.Application.Commands.User
+namespace Core3.Application.Commands.UserCommands
 {
     public class LogoutCommand : IRequest<bool>
     {

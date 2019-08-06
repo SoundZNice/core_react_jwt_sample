@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Core3.Application.Queries.Notes
 {
-    public class GetNotesQuery : IRequest<List<NoteDto>>
+    public class GetNotesQuery : IRequest<List<NoteViewModel>>
     {
     }
 }

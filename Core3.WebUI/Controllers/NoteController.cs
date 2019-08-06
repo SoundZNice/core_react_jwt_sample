@@ -13,7 +13,7 @@ namespace Core3.WebUI.Controllers
     {
         [Route("api/notes")]
         [HttpGet]
-        public async Task<ActionResult<IList<NoteDto>>> GetList()
+        public async Task<ActionResult<IList<NoteViewModel>>> GetList()
         {
             return Ok(await Mediator.Send(new GetNotesQuery()));
         }

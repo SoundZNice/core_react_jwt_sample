@@ -4,13 +4,12 @@ using Core3.Application.Exceptions;
 using Core3.Application.Interfaces;
 using Core3.Application.Interfaces.Services;
 using Core3.Application.Models.Token;
-using Core3.Application.Models.User;
 using Core3.Application.ViewModels;
 using Core3.Common.Helpers;
 using FluentValidation;
 using MediatR;
 
-namespace Core3.Application.Commands.User
+namespace Core3.Application.Commands.UserCommands
 {
     public class LoginUserCommand : IRequest<TokenViewModel>
     {
@@ -41,7 +40,7 @@ namespace Core3.Application.Commands.User
 
             public async Task<TokenViewModel> Handle(LoginUserCommand request, CancellationToken cancellationToken)
             {
-                UserDto user = await _userService.FindUserAsync(request.Username, request.Password);
+                Domain.Entities.User user = await _userService.FindUserAsync(request.Username, request.Password);
                 if (user == null || !user.IsActive)
                 {
                     throw new UnauthrizedException($"No active user with login {request.Username} found!");

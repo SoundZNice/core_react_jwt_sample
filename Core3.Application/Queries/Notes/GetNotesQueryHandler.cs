@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core3.Application.Queries.Notes
 {
-    public class GetNotesQueryHandler : IRequestHandler<GetNotesQuery, List<NoteDto>>
+    public class GetNotesQueryHandler : IRequestHandler<GetNotesQuery, List<NoteViewModel>>
     {
         private readonly ICore3DbContext _context;
         private readonly IMapper _mapper;
@@ -26,9 +26,9 @@ namespace Core3.Application.Queries.Notes
             _mapper = mapper;
         }
 
-        public async Task<List<NoteDto>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
+        public async Task<List<NoteViewModel>> Handle(GetNotesQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Notes.ProjectTo<NoteDto>(_mapper.ConfigurationProvider)
+            return await _context.Notes.ProjectTo<NoteViewModel>(_mapper.ConfigurationProvider)
                 .OrderBy(n => n.DateModified)
                 .ToListAsync(cancellationToken);
         }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Core3.Application.Exceptions;
 using Core3.Application.Interfaces;
-using Core3.Application.Models.User;
 using Core3.Application.ViewModels;
 using Core3.Common.Helpers;
 using FluentValidation;

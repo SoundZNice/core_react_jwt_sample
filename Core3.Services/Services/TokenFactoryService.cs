@@ -5,11 +5,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Core3.Application.Interfaces;
 using Core3.Application.Interfaces.Services;
 using Core3.Application.Models.Token;
-using Core3.Application.Models.User;
 using Core3.Common.Helpers;
+using Core3.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -37,19 +36,16 @@ namespace Core3.Services.Services
             _logger = logger;
         }
 
-        public Task<JwtTokensData> CreateJwtTokensAsync(UserDto user)
+        public Task<JwtTokensData> CreateJwtTokensAsync(User user)
         {
             var (accessToken, claims) = CreateAccessToken(user);
             var (refreshTokenValue, refreshTokenSerial) = CreateRefreshToken();
-            return Task.Run(() =>
+            return Task.Run(() => new JwtTokensData
             {
-                return new JwtTokensData
-                {
-                    AccessToken = accessToken,
-                    RefreshToken = refreshTokenValue,
-                    RefreshTokenSerial = refreshTokenSerial,
-                    Claims = claims
-                };
+                AccessToken = accessToken,
+                RefreshToken = refreshTokenValue,
+                RefreshTokenSerial = refreshTokenSerial,
+                Claims = claims
             });
         }
 
@@ -89,7 +85,7 @@ namespace Core3.Services.Services
             return result;
         }
 
-        private (string AccessToken, IReadOnlyCollection<Claim> Claims) CreateAccessToken(UserDto user)
+        private (string AccessToken, IReadOnlyCollection<Claim> Claims) CreateAccessToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {

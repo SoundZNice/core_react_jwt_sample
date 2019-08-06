@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Core3.Application.Commands.User;
-using Core3.Application.Models.Token;
+using Core3.Application.Commands.UserCommands;
 using Core3.Application.Queries.User;
 using Core3.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;

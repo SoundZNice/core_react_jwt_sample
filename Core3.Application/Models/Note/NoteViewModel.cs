@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace Core3.Application.Models.Note
 {
-    public class NoteDto
+    public class NoteViewModel
     {
         public Guid Id { get; set; }
 

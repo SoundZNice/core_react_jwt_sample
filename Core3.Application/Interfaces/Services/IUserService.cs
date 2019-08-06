@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Core3.Application.Models.User;
+using Core3.Domain.Entities;
 
 namespace Core3.Application.Interfaces.Services
 {
@@ -10,17 +8,19 @@ namespace Core3.Application.Interfaces.Services
     {
         Task<string> GetSerialNumberAsync(Guid userId);
 
-        Task<UserDto> FindUserAsync(string userName, string password);
+        Task<User> FindUserAsync(string userName);
 
-        Task<UserDto> FIndUserAsync(Guid userId);
+        Task<User> FindUserAsync(string userName, string password);
+
+        Task<User> FindUserAsync(Guid userId);
 
         Task UpdateUserLastActivityDateAsync(Guid userId);
 
-        Task<UserDto> GetCurrentUserAsync();
+        Task<User> GetCurrentUserAsync();
 
         Guid GetCurrentUserId();
 
-        Task<(bool succeeded, string error)> ChangePasswordAsync(UserDto user, string currentPassword,
+        Task<(bool succeeded, string error)> ChangePasswordAsync(User user, string currentPassword,
             string newPassword);
     }
 }

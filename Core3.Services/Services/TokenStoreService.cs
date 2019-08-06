@@ -6,7 +6,6 @@ using AutoMapper.QueryableExtensions;
 using Core3.Application.Interfaces;
 using Core3.Application.Interfaces.Services;
 using Core3.Application.Models.Token;
-using Core3.Application.Models.User;
 using Core3.Common.Helpers;
 using Core3.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +42,7 @@ namespace Core3.Services.Services
             _mapper = mapper;
         }
 
-        public async Task AddUserTokenAsync(UserTokenDto userToken)
+        public async Task AddUserTokenAsync(UserToken userToken)
         {
             if (!_configuration.Value.AllowMultipleLoginFromTheSameUser)
             {
@@ -51,13 +50,13 @@ namespace Core3.Services.Services
             }
 
             await DeleteTokensWithSameRefreshTokenSourceAsync(userToken.RefreshTokenIdHashSource);
-            await _context.UserTokens.AddAsync(_mapper.Map<UserTokenDto, UserToken>(userToken));
+            await _context.UserTokens.AddAsync(_mapper.Map<UserToken, UserToken>(userToken));
         }
 
-        public async Task AddUserTokenAsync(UserDto user, string refreshTOkenSerial, string accessToken, string refreshTokenSourceSerial)
+        public async Task AddUserTokenAsync(User user, string refreshTOkenSerial, string accessToken, string refreshTokenSourceSerial)
         {
             DateTimeOffset now = DateTimeOffset.UtcNow;
-            UserTokenDto token = new UserTokenDto
+            UserToken token = new UserToken
             {
                 UserId = user.Id,
                 RefreshTokenIdHash = _securityService.GetSha256Hash(refreshTOkenSerial),
@@ -65,7 +64,7 @@ namespace Core3.Services.Services
                     ? null
                     : _securityService.GetSha256Hash(refreshTokenSourceSerial),
                 AccessTokenHash = _securityService.GetSha256Hash(accessToken),
-                RefreshTokenExpiresDateTime = now.AddMinutes(_configuration.Value.RefreshTokenExpirationMinutes),
+                RefreshTokenExpiresDateTIme = now.AddMinutes(_configuration.Value.RefreshTokenExpirationMinutes),
                 AccessTokenExpiresDateTime = now.AddMinutes(_configuration.Value.AccessTokenExpirationMinutes)
             };
             await AddUserTokenAsync(token);
@@ -74,8 +73,8 @@ namespace Core3.Services.Services
         public async Task<bool> IsValidTokenAsync(string accessToken, Guid userId)
         {
             string accessTokenHash = _securityService.GetSha256Hash(accessToken);
-            UserTokenDto token =
-                await _context.UserTokens.ProjectTo<UserTokenDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x =>
+            UserToken token =
+                await _context.UserTokens.ProjectTo<UserToken>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x =>
                     x.AccessTokenHash == accessTokenHash && x.UserId == userId);
 
             return token?.AccessTokenExpiresDateTime >= DateTimeOffset.UtcNow;
@@ -88,9 +87,9 @@ namespace Core3.Services.Services
                 .ForEachAsync(token => _context.UserTokens.Remove(token));
         }
 
-        public async Task<UserTokenDto> FindTokenAsync(string refreshTokenValue)
+        public async Task<UserToken> FindTokenAsync(string refreshTokenValue)
         {
-            UserTokenDto result = null;
+            UserToken result = null;
 
             if (!string.IsNullOrWhiteSpace(refreshTokenValue))
             {
@@ -99,7 +98,7 @@ namespace Core3.Services.Services
                 {
                     string refreshTokenIdHash = _securityService.GetSha256Hash(refreshTokenSerial);
                     result = await _context.UserTokens
-                        .ProjectTo<UserTokenDto>(_mapper.ConfigurationProvider)
+                        .ProjectTo<UserToken>(_mapper.ConfigurationProvider)
                         .Include(x => x.User)
                         .FirstOrDefaultAsync(x => x.RefreshTokenIdHash == refreshTokenIdHash);
                 }
@@ -110,7 +109,7 @@ namespace Core3.Services.Services
 
         public async Task DeleteTokenAsync(string refreshTokenValue)
         {
-            UserTokenDto userToken = await FindTokenAsync(refreshTokenValue);
+            UserToken userToken = await FindTokenAsync(refreshTokenValue);
             if (userToken != null)
                 await _context.UserTokens.Where(t => t.Id == userToken.Id)
                     .ForEachAsync(token => _context.UserTokens.Remove(token));
