@@ -28,28 +28,36 @@ export default class Notes extends Component {
     }
 
     createNew = async (text) => {
-        await createNote(text);
-        await this.fetchNotes();
+        const result = await createNote(text);
+        if (result === 204)
+            await this.fetchNotes();
+        else
+            this.props.history.push('/500')
     }
 
     fetchNotes = async () => {
-        const notes = await getNotes();
-        this.setState({notes: notes, loading: false});
+        const {obj, status} = await getNotes();
+        if (status === 200)
+            this.setState({notes: obj, loading: false});
+        else 
+            this.props.history.push('/500')
     }
 
     async componentDidMount() {
         await this.fetchNotes();
-        this.last.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        })
+        if (this.last.current)
+            this.last.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
     }
 
     componentDidUpdate() {
-        this.last.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        })
+        if (this.last.current)
+            this.last.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            })
     }
 
     render(){

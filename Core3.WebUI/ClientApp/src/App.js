@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import Notes from './components/Notes'
+import ErrorPage from './components/ErrorPage'
 
 export default class App extends Component {
   static displayName = App.name;//
@@ -12,6 +13,7 @@ export default class App extends Component {
       <Layout>
         <Route exact path='/' component={Home} />
         <Route exact path='/notes' component={Notes}/>
+        <Route exact path='/500' component={ErrorPage}/>
       </Layout>
     );
   }

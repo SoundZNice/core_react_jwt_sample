@@ -15,6 +15,8 @@ namespace Core3.Application.Infrastructure
         private readonly Stopwatch _stopwatch;
         private readonly ILogger<TRequest> _logger;
 
+        private readonly long PERFORMANCE_WARNING_MILLISECONDS = 500;
+
         public RequestPerformanceBehaviour(ILogger<TRequest> logger)
         {
             Guard.ArgumentNotNull(logger, nameof(logger));
@@ -32,11 +34,11 @@ namespace Core3.Application.Infrastructure
 
             _stopwatch.Stop();
 
-            if (_stopwatch.ElapsedMilliseconds > 500)
+            if (_stopwatch.ElapsedMilliseconds > PERFORMANCE_WARNING_MILLISECONDS)
             {
                 string name = typeof(TRequest).Name;
 
-                _logger.LogError($"Request: {name} ({_stopwatch.ElapsedMilliseconds}) {request}");
+                _logger.LogWarning($"Request: {name} ({_stopwatch.ElapsedMilliseconds}) {request}, Performance Issue: request hadle took more then {PERFORMANCE_WARNING_MILLISECONDS}");
             }
 
             return response;
