@@ -8,15 +8,15 @@ export default class App extends Component {
   constructor(props){
     super(props)
 
-    this.state = {state: 'noauth'}
+    this.state = {state: 'auth'}
   } 
 
   render () {    
-    //const r = routes.get(this.state.state)
+    const r = routes.get(this.state.state)
     return (
-      <Layout>
-        {/* {r.map(({route, component}) => 
-          { return <Route exaxt path={route} component={component}/>} )} */}
+      <Layout menu={r.filter(route => route.nav)}>
+        {r.map(({route, component}) => 
+          <Route exact path={route} key={route} component={component}/> )}
       </Layout>
     );
   }

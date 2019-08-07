@@ -6,13 +6,16 @@ export class Home extends Component {
   render () {
     return (
       <div>
-        <h1>This application can:</h1>
+        <h1>This application does:</h1>
         <p>
         <li>
-            <a href="/login">Login</a>
+            Logging in;
+          </li>          
+          <li>
+            Registration;
           </li>
           <li>
-            <a href="/notes">Store Notes</a>
+            Store Notes.
           </li>
         </p> 
       </div>
