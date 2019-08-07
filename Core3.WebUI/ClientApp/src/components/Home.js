@@ -8,6 +8,9 @@ export class Home extends Component {
       <div>
         <h1>This application can:</h1>
         <p>
+        <li>
+            <a href="/login">Login</a>
+          </li>
           <li>
             <a href="/notes">Store Notes</a>
           </li>

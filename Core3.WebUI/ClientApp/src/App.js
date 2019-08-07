@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import Notes from './components/Notes'
-import ErrorPage from './components/ErrorPage'
+import { routes } from './components/Pages'
 
 export default class App extends Component {
   static displayName = App.name;//
+  constructor(props){
+    super(props)
 
-  render () {
+    this.state = {state: 'noauth'}
+  } 
+
+  render () {    
+    //const r = routes.get(this.state.state)
     return (
       <Layout>
-        <Route exact path='/' component={Home} />
-        <Route exact path='/notes' component={Notes}/>
-        <Route exact path='/500' component={ErrorPage}/>
+        {/* {r.map(({route, component}) => 
+          { return <Route exaxt path={route} component={component}/>} )} */}
       </Layout>
     );
   }
