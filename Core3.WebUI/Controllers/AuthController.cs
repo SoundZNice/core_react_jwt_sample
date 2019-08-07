@@ -10,7 +10,7 @@ namespace Core3.WebUI.Controllers
         [IgnoreAntiforgeryToken]
         [Route("api/login")]
         [HttpPost]
-        public async Task<ActionResult<TokenViewModel>> Login([FromBody] LoginUserCommand loginUserCommand)
+        public async Task<ActionResult<TokenViewModel>> Login([FromForm] LoginUserCommand loginUserCommand)
         {
             return Ok(await Mediator.Send(loginUserCommand));
         }

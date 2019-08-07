@@ -15,7 +15,7 @@ namespace Core3.Application.Infrastructure
         private readonly Stopwatch _stopwatch;
         private readonly ILogger<TRequest> _logger;
 
-        private readonly long PERFORMANCE_WARNING_MILLISECONDS = 500;
+        private const long PERFORMANCE_WARNING_MILLISECONDS = 500;
 
         public RequestPerformanceBehaviour(ILogger<TRequest> logger)
         {
