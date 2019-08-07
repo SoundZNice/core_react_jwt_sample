@@ -11,6 +11,7 @@ using Core3.Application.Interfaces.Services;
 using Core3.Application.Models.ApiSettings;
 using Core3.Application.Models.Token;
 using Core3.Persistence;
+using Core3.Services.Services;
 using Core3.WebUI.Filters;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -48,6 +49,12 @@ namespace Core3.WebUI
             services.AddDbContext<ICore3DbContext, Core3DbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Core3DB")));
 
+            services.AddScoped<ITokenFactoryService, TokenFactoryService>();
+            services.AddScoped<ITokenStoreService, TokenStoreService>();
+            services.AddScoped<ITokenValidatorService, TokenValidatorService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<ISecurityService, SecurityService>();
+
             services.AddMvc(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateNoteCommandValidator>());
@@ -69,7 +76,13 @@ namespace Core3.WebUI
             services.AddOptions<ApiSettings>()
                 .Bind(Configuration.GetSection("ApiSettings"));
 
-            services.AddAuthentication()
+            services.AddAuthorization();
+            services.AddAuthentication(options =>
+                    {
+                        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                        options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+                        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
                 .AddJwtBearer(cfg =>
                 {
                     cfg.RequireHttpsMetadata = false;

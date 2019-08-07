@@ -56,6 +56,7 @@ namespace Core3.Application.Commands.UserCommands
             {
                 Guard.ArgumentNotNull(userService, nameof(userService));
 
+                RuleFor(x => x).NotNull().WithMessage($"{nameof(RegisterUserCommand)} is missing");
                 RuleFor(x => x.UserName).NotEmpty().WithMessage(x => $"{nameof(x.UserName)} is missing");
                 RuleFor(x => x.DisplayName).NotEmpty().WithMessage(x => $"{nameof(x.DisplayName)} is missing");
                 RuleFor(x => x.Password).NotEmpty().WithMessage(x => $"{nameof(x.Password)} is missing");

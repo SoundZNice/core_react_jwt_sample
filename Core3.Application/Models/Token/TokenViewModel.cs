@@ -1,4 +1,4 @@
-﻿namespace Core3.Application.ViewModels
+﻿namespace Core3.Application.Models.Token
 {
     public class TokenViewModel
     {

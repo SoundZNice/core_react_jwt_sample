@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Core3.Application.Commands.UserCommands;
-using Core3.Application.Queries.User;
-using Core3.Application.ViewModels;
+using Core3.Application.Models.Token;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core3.WebUI.Controllers
@@ -42,13 +41,6 @@ namespace Core3.WebUI.Controllers
         public bool IsAuthenticated()
         {
             return User.Identity.IsAuthenticated;
-        }
-
-        [Route("api/userinfo")]
-        [HttpGet]
-        public async Task<IActionResult> UserInfo()
-        {
-            return Ok(await Mediator.Send(new UserInformationQuery()));
         }
     }
 }
