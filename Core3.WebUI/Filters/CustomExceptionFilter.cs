@@ -41,6 +41,10 @@ namespace Core3.WebUI.Filters
                 {
                     code = HttpStatusCode.BadRequest;
                 }
+                else if (context.Exception is UnauthrizedException)
+                {
+                    code = HttpStatusCode.Unauthorized;
+                }
 
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)code;

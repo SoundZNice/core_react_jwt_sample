@@ -29,13 +29,11 @@ export class NavMenu extends Component {
             <NavbarBrand tag={Link} to="/">Learning Training Core3</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/notes">Notes</NavLink>
-                </NavItem>
+              <ul className="navbar-nav flex-grow">                
+                {this.props.menu.map(r => 
+                  <NavItem key={r.route}>
+                    <NavLink tag={Link} className="text-dark" to={r.route}>{r.name}</NavLink>
+                  </NavItem>)}
               </ul>
             </Collapse>
           </Container>

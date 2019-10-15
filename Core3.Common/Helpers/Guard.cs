@@ -23,5 +23,11 @@ namespace Core3.Common.Helpers
             if (arg == null || !arg.Any())
                 throw new ArgumentException(argName);
         }
+
+        public static void ArgumentStringNotNull(string arg, string argName)
+        {
+            if (string.IsNullOrWhiteSpace(arg))
+                throw new ArgumentException(argName);
+        }
     }
 }
